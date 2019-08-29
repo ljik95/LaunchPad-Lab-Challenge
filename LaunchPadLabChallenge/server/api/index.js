@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-router.use('/kittens', require('./kittens')); // matches all requests to  /api/kittens/
+router.use('/votes', require('./votes'));
 
 // Handle 404s
 router.use(function (req, res, next) {

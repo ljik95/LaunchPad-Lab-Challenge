@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { fetchGitData, fetchCommitData, fetchVotes } from '../store';
+import { connect } from 'react-redux';
+// import { stat } from 'fs';
 
 const frameworks = {
   react: "https://api.github.com/repos/facebook/react",
@@ -8,42 +11,60 @@ const frameworks = {
 }
 
 class Homepage extends Component {
+
   constructor() {
     super();
-    this.state = {
-      reactData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0},
-      angularData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0},
-      emberData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0},
-      vueData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0}
-    };
-  }
+    this.commitCountHelpFunc = this.commitCountHelpFunc.bind(this);
+  };
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     reactData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0},
+  //     angularData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0},
+  //     emberData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0},
+  //     vueData: {starCount: 0, issueCount: 0, weeklyCommitCount: 0, monthlyCommitCount: 0}
+  //   };
+  // }
 
   componentDidMount() {
-    Object.keys(frameworks).forEach((framework => {
-      console.log('gets here')
-      fetch(frameworks[framework])
-      .then(res => res.json())
-      .then(body => {
-        this.setState((prev) => {
-          prev[`${framework}Data`].starCount = body.stargazers_count
-          prev[`${framework}Data`].issueCount = body.open_issues_count
-          prev[`${framework}Data`].forkCount = body.forks
-        })
-      });
-      fetch(`${frameworks[framework]}/stats/commit_activity`)
-      .then(res => res.json())
-      .then(body => {
-        this.setState((prev) => {
-          prev[`${framework}Data`].weeklyCommitCount = body[body.length - 1].total
-          prev[`${framework}Data`].monthlyCommitCount = body[body.length - 1].total + body[body.length - 2].total + body[body.length - 3].total + body[body.length - 4].total
-        })
-      });
-    }))
+    // Object.keys(frameworks).forEach((framework => {
+    //   fetch(frameworks[framework])
+    //   .then(res => res.json())
+    //   .then(body => {
+    //     this.setState((prev) => {
+    //       prev[`${framework}Data`].starCount = body.stargazers_count
+    //       prev[`${framework}Data`].issueCount = body.open_issues_count
+    //       prev[`${framework}Data`].forkCount = body.forks
+    //     })
+    //     console.log('gets here', this.state)
+    //   });
+      // fetch(`${frameworks[framework]}/stats/commit_activity`)
+      // .then(res => res.json())
+      // .then(body => {
+      //   this.setState((prev) => {
+      //     prev[`${framework}Data`].weeklyCommitCount = body[body.length - 1].total
+      //     prev[`${framework}Data`].monthlyCommitCount = body[body.length - 1].total + body[body.length - 2].total + body[body.length - 3].total + body[body.length - 4].total
+      //   })
+      // });
+    // }))
+
+    this.props.fetchGitData();
+    this.props.fetchCommitData();
+  }
+
+  commitCountHelpFunc(time, data) {
+    if (time === 'month') {
+      return data[data.length - 1].total + data[data.length - 2].total + data[data.length - 3].total + data[data.length - 4].total
+    } else {
+      return data[data.length - 1].total
+    }
   }
 
   render() {
-    console.log(this.state)
+    const gitData = this.props.gitData
+    const commitData = this.props.commitData
     return (
+      commitData.reactData.length ?
       <React.Fragment>
         <h1>Hi</h1>
         <table>
@@ -57,37 +78,55 @@ class Homepage extends Component {
             </tr>
             <tr>
               <td>Number of Stars</td>
-              <td>{this.state.reactData.starCount}</td>
-              <td>{this.state.angularData.starCount}</td>
-              <td>{this.state.emberData.starCount}</td>
-              <td>{this.state.vueData.starCount}</td>
+              <td>{gitData.reactData.stargazers_count}</td>
+              <td>{gitData.angularData.stargazers_count}</td>
+              <td>{gitData.emberData.stargazers_count}</td>
+              <td>{gitData.vueData.stargazers_count}</td>
             </tr>
             <tr>
               <td>Number of Forks</td>
-              <td>{this.state.reactData.forkCount}</td>
-              <td>{this.state.angularData.forkCount}</td>
-              <td>{this.state.emberData.forkCount}</td>
-              <td>{this.state.vueData.forkCount}</td>
+              <td>{gitData.reactData.forks}</td>
+              <td>{gitData.angularData.forks}</td>
+              <td>{gitData.emberData.forks}</td>
+              <td>{gitData.vueData.forks}</td>
             </tr>
             <tr>
               <td>Number of Commits From Past Week</td>
-              <td>{this.state.reactData.weeklyCommitCount}</td>
-              <td>{this.state.angularData.weeklyCommitCount}</td>
-              <td>{this.state.emberData.weeklyCommitCount}</td>
-              <td>{this.state.vueData.weeklyCommitCount}</td>
+              <td>{this.commitCountHelpFunc('week', commitData.reactData)}</td>
+              <td>{this.commitCountHelpFunc('week', commitData.angularData)}</td>
+              <td>{this.commitCountHelpFunc('week', commitData.emberData)}</td>
+              <td>{this.commitCountHelpFunc('week', commitData.vueData)}</td>
             </tr>
             <tr>
               <td>Number of Commits From Past Month</td>
-              <td>{this.state.reactData.monthlyCommitCount}</td>
-              <td>{this.state.angularData.monthlyCommitCount}</td>
-              <td>{this.state.emberData.monthlyCommitCount}</td>
-              <td>{this.state.vueData.monthlyCommitCount}</td>
+              <td>{this.commitCountHelpFunc('month', commitData.reactData)}</td>
+              <td>{this.commitCountHelpFunc('month', commitData.angularData)}</td>
+              <td>{this.commitCountHelpFunc('month', commitData.emberData)}</td>
+              <td>{this.commitCountHelpFunc('month', commitData.vueData)}</td>
             </tr>
           </tbody>
         </table>
-      </React.Fragment>
+      </React.Fragment> :
+      <div>
+        Not rendered
+      </div>
     )
   }
 }
 
-export default Homepage;
+const mapState = (state) => {
+  return {
+    gitData: state.gitData,
+    commitData: state.commitData
+  };
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+    fetchGitData: () => dispatch(fetchGitData()),
+    fetchCommitData: () => dispatch(fetchCommitData()),
+    fetchVotes: () => dispatch(fetchVotes())
+  };
+}
+
+export default connect(mapState, mapDispatch)(Homepage);
