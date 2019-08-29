@@ -106,6 +106,20 @@ export const fetchVotes = () => {
   };
 };
 
+export const addVote = (framework) => {
+  return async (dispatch) => {
+    try {
+      await fetch(`/api/votes/${framework}`, {method: 'PUT'})
+        .then(res => res.json())
+        .then(data => {
+          dispatch(getVotes(data));
+        });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_GIT_DATA:
