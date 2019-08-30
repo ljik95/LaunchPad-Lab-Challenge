@@ -3,7 +3,7 @@ const pkg = require('../../package.json')
 
 const dbName = process.env.NODE_ENV === 'test' ? `${pkg.name}-test` : pkg.name;
 
-const db = new Sequelize(`postgres://localhost:5432/${dbName}`, {
+const db = new Sequelize(process.env.DATABASE_URL || `postgres://localhost:5432/${dbName}`, {
   host: 'localhost',
   pool: {
     max: 10,
