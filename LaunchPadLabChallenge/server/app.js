@@ -6,7 +6,7 @@ const session = require('express-session');
 
 app.use(session({secret: 'jay'}));
 
-app.use(express.static(path.join(__dirname, '../public')))
+app.use(express.static(path.join(__dirname, '../public')));
 
 // api routes
 app.use('/api', require('./api'));
@@ -34,5 +34,5 @@ const port = process.env.PORT || 7777;
 
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
-  console.log(`http://localhost:${port}/`)
+  console.log(`http://localhost:${port}/`);
 });

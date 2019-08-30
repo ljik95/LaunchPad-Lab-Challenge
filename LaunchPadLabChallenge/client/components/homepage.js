@@ -24,6 +24,11 @@ class Homepage extends Component {
     }, 60000);
   }
 
+  // prevents memory leak.
+  componentWillUnmount() {
+    clearInterval();
+  }
+
   handleVote(evt) {
     this.props.addVote(evt.target.value);
   }
@@ -31,16 +36,14 @@ class Homepage extends Component {
   // calculates the number of commits weekly and monthly
   commitCountHelpFunc(time, data) {
     if (time === 'month') {
-      return data[data.length - 1].total + data[data.length - 2].total + data[data.length - 3].total + data[data.length - 4].total
+      return data[data.length - 1].total + data[data.length - 2].total + data[data.length - 3].total + data[data.length - 4].total;
     } else {
-      return data[data.length - 1].total
+      return data[data.length - 1].total;
     }
   }
 
   render() {
-    const gitData = this.props.gitData
-    const commitData = this.props.commitData
-    const votes = this.props.votes
+    const { gitData, commitData, votes } = this.props;
     return (
       commitData.reactData.length ?
       <React.Fragment>
@@ -105,7 +108,7 @@ class Homepage extends Component {
         <h3>( You can vote only once! )</h3>
       </React.Fragment> :
       <NotFound />
-    )
+    );
   }
 }
 

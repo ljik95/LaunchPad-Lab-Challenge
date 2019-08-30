@@ -13,7 +13,7 @@ const Main = () => {
         </Switch>
       </div>
     </Router>
-  )
+  );
 }
 
 export default Main;

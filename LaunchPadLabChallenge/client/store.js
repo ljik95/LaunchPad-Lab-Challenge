@@ -60,14 +60,14 @@ export const fetchGitData = () => {
   return async (dispatch) => {
     try {
       const reactGitData = await fetch(frameworks.react)
-        .then(res => res.json())
+        .then(res => res.json());
       const angularGitData = await fetch(frameworks.angular)
-        .then(res => res.json())
+        .then(res => res.json());
       const emberGitData = await fetch(frameworks.ember)
-        .then(res => res.json())
+        .then(res => res.json());
       const vueGitData = await fetch(frameworks.vue)
-        .then(res => res.json())
-      dispatch(getGitData(reactGitData, angularGitData, emberGitData, vueGitData))
+        .then(res => res.json());
+      dispatch(getGitData(reactGitData, angularGitData, emberGitData, vueGitData));
     } catch (err) {
       console.error(err);
     }
@@ -78,14 +78,14 @@ export const fetchCommitData = () => {
   return async (dispatch) => {
     try {
       const reactCommitData = await fetch(`${frameworks.react}/stats/commit_activity`)
-        .then(res => res.json())
+        .then(res => res.json());
       const angularCommitData = await fetch(`${frameworks.angular}/stats/commit_activity`)
-        .then(res => res.json())
+        .then(res => res.json());
       const emberCommitData = await fetch(`${frameworks.ember}/stats/commit_activity`)
-        .then(res => res.json())
+        .then(res => res.json());
       const vueCommitData = await fetch(`${frameworks.vue}/stats/commit_activity`)
-        .then(res => res.json())
-      dispatch(getCommitData(reactCommitData, angularCommitData, emberCommitData, vueCommitData))
+        .then(res => res.json());
+      dispatch(getCommitData(reactCommitData, angularCommitData, emberCommitData, vueCommitData));
     } catch (err) {
       console.error(err);
     }

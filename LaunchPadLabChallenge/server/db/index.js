@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const pkg = require('../../package.json')
 
-const dbName = process.env.NODE_ENV === 'test' ? `${pkg.name}-test` : pkg.name
+const dbName = process.env.NODE_ENV === 'test' ? `${pkg.name}-test` : pkg.name;
 
 const db = new Sequelize(`postgres://localhost:5432/${dbName}`, {
   host: 'localhost',
@@ -12,7 +12,7 @@ const db = new Sequelize(`postgres://localhost:5432/${dbName}`, {
     idle: 10000
   },
   logging: false
-})
+});
 
 const Vote = db.define('vote', {
   react: {
@@ -31,22 +31,22 @@ const Vote = db.define('vote', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   }
-})
+});
 
 const User = db.define('user', {
   sessionID: {
     type: Sequelize.STRING,
     allowNull: false
   }
-})
+});
 
 db.sync({ force: false })
   .then(() => {
     return Vote.create({});
-  })
+  });
 
 module.exports = {
   db,
   Vote,
   User
-}
+};
